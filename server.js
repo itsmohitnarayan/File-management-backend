@@ -7,19 +7,19 @@ import fileRoutes from './routes/fileRoutes.js';
 
 dotenv.config();  // Load environment variables
 
+
 const app = express();
 
 // Middleware to parse incoming JSON
 app.use(express.json());
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('MongoDB connected...');
+mongoose.connect(process.env.MONGODB_URI, { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
   })
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
-  });
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.log('MongoDB connection error:', err));
 
 // Routes
 app.use('/api/auth', authRoutes);
