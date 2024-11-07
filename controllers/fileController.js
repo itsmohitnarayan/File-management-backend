@@ -116,30 +116,26 @@ export const updateFile = async (req, res) => {
 };
 
 export const moveFile = async (req, res) => {
+  const { newDepartment } = req.body;
+
   try {
-      const { fileId, toDepartment } = req.body;
-      const userId = req.user._id;
+    const file = await File.findById(req.params.id);
+    if (!file) return res.status(404).json({ message: 'File not found' });
 
-      // Find the file to be moved
-      const file = await File.findById(fileId);
-      if (!file) return res.status(404).json({ message: "File not found" });
+    // Log the movement details in the file's movements array
+    file.movements.push({
+      fromDepartment: file.department,
+      toDepartment: newDepartment,
+      movedAt: Date.now(),
+    });
 
-      // Log the movement in FileMovement collection
-      await FileMovement.create({
-          fileId: file._id,
-          fromDepartment: file.department,
-          toDepartment,
-          movedBy: userId,
-          timestamp: new Date()
-      });
+    // Update the current department
+    file.department = newDepartment;
+    await file.save();
 
-      // Update the file's current department
-      file.department = toDepartment;
-      await file.save();
-
-      res.json({ message: "File moved successfully", file });
+    res.json({ message: 'File moved successfully', file });
   } catch (error) {
-      res.status(500).json({ message: "Failed to move file", error });
+    res.status(500).json({ message: 'Failed to move file', error: error.message });
   }
 };
 

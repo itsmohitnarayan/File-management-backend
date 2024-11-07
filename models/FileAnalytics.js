@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const fileAnalyticsSchema = new mongoose.Schema({
   fileId: { type: mongoose.Schema.Types.ObjectId, ref: 'File' },
@@ -6,4 +6,7 @@ const fileAnalyticsSchema = new mongoose.Schema({
   movementTime: Number, // Time taken for file movement in ms
 });
 
-module.exports = mongoose.model('FileAnalytics', fileAnalyticsSchema);
+// Use default export for the schema
+const FileAnalytics = mongoose.model('FileAnalytics', fileAnalyticsSchema);
+
+export default FileAnalytics;

@@ -5,11 +5,12 @@ import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
 import requestRoutes from './routes/requestRoutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
+
+// Initialize the express app
+const app = express();
 
 dotenv.config();  // Load environment variables
-
-
-const app = express();
 
 // Middleware to parse incoming JSON
 app.use(express.json());
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   .catch((err) => console.log('MongoDB connection error:', err));
 
 // Routes
+app.use('/api/analytics', analyticsRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
