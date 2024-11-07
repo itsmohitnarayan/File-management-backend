@@ -1,9 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const fileController = require('../controllers/fileController');
+const authMiddleware = require('../middlewares/authMiddleware');
+const { trackFile, requestFile, moveFile } = require('../controllers/fileController');
 
-router.post('/request', fileController.requestFile);
-router.put('/approve/:id', fileController.approveFileMovement);
-router.get('/track/:id', fileController.trackFile);
+// Track a file movement
+router.get('/:fileId', authMiddleware, trackFile);
+
+// Request a file for movement
+router.post('/:fileId/request', authMiddleware, requestFile);
+
+// Move a file to another department
+router.put('/:fileId/move', authMiddleware, moveFile);
 
 module.exports = router;

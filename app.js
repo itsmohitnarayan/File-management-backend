@@ -14,7 +14,7 @@ app.use(cors());
 app.use(morgan('dev')); // Optional
 
 // Import routes
-const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const orderRoutes = require('./routes/orderRoutes');
