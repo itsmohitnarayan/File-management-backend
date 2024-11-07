@@ -1,5 +1,3 @@
-
-
 // Track file movement
 export const trackFile = (req, res) => {
   const { fileId } = req.params;
@@ -12,11 +10,6 @@ export const requestFile = (req, res) => {
   res.json({ message: `File with ID: ${fileId} requested for movement` });
 };
 
-// Move file to another department
-export const moveFile = (req, res) => {
-  const { fileId } = req.params;
-  res.json({ message: `File with ID: ${fileId} moved successfully` });
-};
 // Create a new file
 export const createFile = async (req, res) => {
   const { fileName, department, status } = req.body;
@@ -59,6 +52,8 @@ export const uploadFile = async (req, res) => {
       filePath: req.file.path,
       department: department,
       status: status,
+      tags: req.body.tags,
+      description: req.body.description,
     };
 
     // Save newFile to the database or process as needed
@@ -102,4 +97,62 @@ export const getAllFiles = async (req, res) => {
   }
 };
 
-export default { trackFile, requestFile, moveFile , createFile, uploadFile, deleteFile , getAllFiles };
+export const updateFile = async (req, res) => {
+  try {
+      const file = await File.findById(req.params.id);
+      if (!file) {
+          return res.status(404).json({ message: "File not found" });
+      }
+
+      // Save current version
+      file.versions.push({ filePath: file.filePath, timestamp: file.updatedAt });
+      file.filePath = req.body.filePath; // update with new data
+      await file.save();
+
+      res.json({ message: "File updated with versioning", file });
+  } catch (error) {
+      res.status(500).json({ message: "Failed to update file" });
+  }
+};
+
+export const moveFile = async (req, res) => {
+  try {
+      const { fileId, toDepartment } = req.body;
+      const userId = req.user._id;
+
+      // Find the file to be moved
+      const file = await File.findById(fileId);
+      if (!file) return res.status(404).json({ message: "File not found" });
+
+      // Log the movement in FileMovement collection
+      await FileMovement.create({
+          fileId: file._id,
+          fromDepartment: file.department,
+          toDepartment,
+          movedBy: userId,
+          timestamp: new Date()
+      });
+
+      // Update the file's current department
+      file.department = toDepartment;
+      await file.save();
+
+      res.json({ message: "File moved successfully", file });
+  } catch (error) {
+      res.status(500).json({ message: "Failed to move file", error });
+  }
+};
+
+// Get File Tracking History
+export const getFileTrackingHistory = async (req, res) => {
+  try {
+      const { fileId } = req.params;
+      
+      const movements = await FileMovement.find({ fileId }).sort({ timestamp: -1 }).populate('movedBy', 'username');
+      res.json(movements);
+  } catch (error) {
+      res.status(500).json({ message: "Failed to retrieve file tracking history", error });
+  }
+};
+
+export default { trackFile, requestFile, moveFile , createFile, uploadFile, deleteFile , getAllFiles, updateFile, getFileTrackingHistory };

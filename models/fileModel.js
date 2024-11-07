@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { version } from 'mongoose';
 
 const fileSchema = new mongoose.Schema({
   fileName: {
@@ -21,6 +21,10 @@ const fileSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  versions: [{ filePath: String, timestamp: Date }],
+  createdAt: { type: Date, default: Date.now },
+  tags: [String],
+  description: String,
 });
 
 const File = mongoose.model('File', fileSchema);

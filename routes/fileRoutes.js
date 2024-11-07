@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import { createFile, getAllFiles, trackFile, requestFile, moveFile, uploadFile, deleteFile} from '../controllers/fileController.js';
+import checkRole from '../middlewares/checkRole.js';
 
 const router = express.Router();
 
@@ -14,8 +15,14 @@ const storage = multer.diskStorage({
         cb(null, Date.now() + '-' + file.originalname);
     }
 });
-
 const upload = multer({ dest: 'uploads/' });
+
+
+
+
+
+
+
 
 // Add a new route for uploading files
 router.post('/upload', upload.single('file'), uploadFile);

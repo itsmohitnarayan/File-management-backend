@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
+import requestRoutes from './routes/requestRoutes.js';
 
 dotenv.config();  // Load environment variables
 
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   .catch((err) => console.log('MongoDB connection error:', err));
 
 // Routes
+app.use('/api/requests', requestRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/files', fileRoutes);
