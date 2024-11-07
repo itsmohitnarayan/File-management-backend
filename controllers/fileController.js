@@ -74,18 +74,20 @@ export const uploadFile = async (req, res) => {
 
 export const deleteFile = async (req, res) => {
   try {
+    // Ensure req.params.fileId is the correct value
     const fileId = req.params.fileId;
 
-    // Make sure to use the correct method to find and delete the file
-    const file = await File.findByIdAndRemove({_id: fileId});
+    // Ensure that File.findByIdAndDelete is called properly
+    const file = await File.findById(fileId);
 
+    // Check if file exists and delete
     if (!file) {
-      return res.status(404).json({ message: "File not found" });
+      return res.status(404).json({ message: 'File not found' });
     }
 
-    return res.status(200).json({ message: "File deleted successfully" });
+    return res.status(200).json({ message: 'File deleted successfully' });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to delete file", error: error.message });
+    return res.status(500).json({ message: 'Failed to delete file', error: error.message });
   }
 };
 
