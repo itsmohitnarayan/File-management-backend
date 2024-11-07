@@ -1,4 +1,5 @@
 const Inventory = require('../models/inventory');
+const monitoringService = require('../services/monitoringService');
 
 exports.requestInventoryItem = async (req, res) => {
   try {
@@ -8,7 +9,7 @@ exports.requestInventoryItem = async (req, res) => {
 
     if (item.stockLevel < quantity) {
       item.backorder = true;
-      item.purchaseOrder.push({
+      item.purchaseOrders.push({
         orderId: new mongoose.Types.ObjectId().toString(),
         quantity,
         status: 'pending',
@@ -19,25 +20,12 @@ exports.requestInventoryItem = async (req, res) => {
     }
     await item.save();
     res.json({ item });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
-exports.autoReorder = async (req, res) => {
-  try {
-    const items = await Inventory.find({ stockLevel: { $lt: reorderLevel } });
-    items.forEach(async item => {
-      item.purchaseOrder.push({
-        orderId: new mongoose.Types.ObjectId().toString(),
-        quantity: item.reorderLevel * 2,
-        status: 'pending',
-        dateOrdered: new Date()
-      });
-      await item.save();
-    });
-    res.json({ message: 'Reorder initiated for low-stock items' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+
+exports.startInventoryMonitoring = async () => {
+    setInterval(monitoringService.monitorStockLevels, 24 * 60 * 60 * 1000); // Daily check
+  };
