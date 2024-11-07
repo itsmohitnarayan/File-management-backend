@@ -1,6 +1,4 @@
-
-
-# File Management System Backend
+# File Management System
 
 This is a file management system built with Node.js, Express, and MongoDB that allows users to upload, track, move, and manage files. The system supports user authentication with JWT tokens and provides endpoints to manage file operations such as uploading, requesting movement, and tracking files. It includes functionalities for file metadata management, such as status updates and department tracking.
 
@@ -20,7 +18,7 @@ This is a file management system built with Node.js, Express, and MongoDB that a
 - **MongoDB**: NoSQL database to store user and file data.
 - **Mongoose**: ODM for interacting with MongoDB.
 - **JWT**: JSON Web Token for user authentication and authorization.
-- **Mulher**: Middleware for handling file uploads.
+- **Multer**: Middleware for handling file uploads.
 
 ## Prerequisites
 
@@ -35,8 +33,8 @@ Before you start, ensure you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/itsmohitnarayan/IIIT-BBSR-File-Management.git
-   cd IIIT-BBSR-File-Management
+   git clone https://github.com/itsmohitnarayan/File-management-backend.git
+   cd File-management-backend
    ```
 
 2. Install dependencies:
@@ -120,5 +118,3 @@ Feel free to open an issue or make a pull request if you want to contribute to t
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-This README provides a complete overview of the project, installation steps, API details, and testing information without mentioning "IIIT-BBSR File Management" specifically.
