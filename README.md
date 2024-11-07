@@ -107,6 +107,24 @@ Then, run the tests using:
 npm test
 ```
 
+```
+http://localhost:5000/api/users/register post
+{
+  "username": "johndoe123",
+  "name": "John Doe",
+  "email": "johndoe@example.com",
+  "password": "securepassword"
+}
+
+http://localhost:5000/api/users/login  post
+
+{
+  "email": "johndoe@example.com",
+  "password": "newsecurepassword"
+}
+
+
+
 Test cases are structured to verify the key functionalities like file upload, movement, and user authentication.
 
 ## Contributing
@@ -118,3 +136,4 @@ Feel free to open an issue or make a pull request if you want to contribute to t
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
+
