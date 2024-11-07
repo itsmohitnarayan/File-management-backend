@@ -1,30 +1,25 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const morgan = require('morgan'); // Optional: for logging
+import express from 'express';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import userRoutes from './routes/userRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import fileRoutes from './routes/fileRoutes.js';
 
 dotenv.config();
 
 const app = express();
 
-// Middleware
+// Middleware for parsing JSON requests
 app.use(express.json());
-app.use(cors());
-app.use(morgan('dev')); // Optional
 
-// Import routes
-const authRoutes = require('./routes/authRoutes');
-const fileRoutes = require('./routes/fileRoutes');
-const inventoryRoutes = require('./routes/inventoryRoutes');
-const orderRoutes = require('./routes/orderRoutes');
-const analyticsRoutes = require('./routes/analyticsRoutes');
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch((error) => console.log(error));
 
-// Route Middleware
+// Routes setup
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/files', fileRoutes);
-app.use('/api/inventory', inventoryRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/analytics', analyticsRoutes);
 
-module.exports = app;
+export default app;

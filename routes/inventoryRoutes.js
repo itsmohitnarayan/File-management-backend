@@ -1,8 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const inventoryController = require('../controllers/inventoryController');
+// Import necessary controller functions
+const { getInventoryItems, createInventoryItem } = require("../controllers/inventoryController");
 
-router.post('/request', inventoryController.requestInventoryItem);
-router.get('/auto-reorder', inventoryController.autoReorder);
+// Define routes with proper callback functions
+router.get("/items", getInventoryItems);  // Check that `getInventoryItems` is defined and imported correctly
+router.post("/items", createInventoryItem);  // Check that `createInventoryItem` is defined and imported correctly
 
 module.exports = router;

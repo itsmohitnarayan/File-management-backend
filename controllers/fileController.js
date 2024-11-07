@@ -1,24 +1,17 @@
-const File = require('../models/file');
-
-// Track file location
-exports.trackFile = async (req, res) => {
-  try {
-    const file = await File.findById(req.params.fileId);
-    if (!file) return res.status(404).json({ message: 'File not found' });
-    res.json(file);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
+// Track file movement
+export const trackFile = (req, res) => {
+  const { fileId } = req.params;
+  res.json({ message: `Tracking file with ID: ${fileId}` });
 };
 
-// Request a file for movement
-exports.requestFile = async (req, res) => {
-  // Logic to request a file
-  res.status(200).json({ message: 'File requested' });
+// Request file for movement
+export const requestFile = (req, res) => {
+  const { fileId } = req.params;
+  res.json({ message: `File with ID: ${fileId} requested for movement` });
 };
 
-// Move a file to another department
-exports.moveFile = async (req, res) => {
-  // Logic to move the file to another department
-  res.status(200).json({ message: 'File moved' });
+// Move file to another department
+export const moveFile = (req, res) => {
+  const { fileId } = req.params;
+  res.json({ message: `File with ID: ${fileId} moved successfully` });
 };
