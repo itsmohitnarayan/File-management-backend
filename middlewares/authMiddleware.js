@@ -1,20 +1,19 @@
 import jwt from 'jsonwebtoken';
 
 const authMiddleware = (req, res, next) => {
-  const token = req.headers['authorization'];
+  const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
-    return res.status(403).json({ message: 'Access denied' });
+    return res.status(401).json({ message: 'Access denied, no token provided' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: 'Invalid token' });
-    }
-
-    req.userId = decoded.userId;
-    next();
-  });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Ensure `JWT_SECRET` matches what's used to sign the token
+    req.user = decoded; // Attach the decoded user data to the request object
+    next(); // Proceed to the next middleware or route handler
+  } catch (err) {
+    res.status(401).json({ message: 'Invalid or expired token' });
+  }
 };
 
 export default authMiddleware;
