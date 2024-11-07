@@ -155,4 +155,15 @@ export const getFileTrackingHistory = async (req, res) => {
   }
 };
 
+// Get file details (only accessible if department matches or user is admin)
+export const getFile = async (req, res) => {
+  try {
+      const file = await File.findById(req.params.id);
+      if (!file) return res.status(404).json({ message: 'File not found' });
+      res.json(file);
+  } catch (error) {
+      res.status(500).json({ message: 'Failed to retrieve file', error: error.message });
+  }
+};
+
 export default { trackFile, requestFile, moveFile , createFile, uploadFile, deleteFile , getAllFiles, updateFile, getFileTrackingHistory };

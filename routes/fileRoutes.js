@@ -2,7 +2,8 @@ import express from 'express';
 import multer from 'multer';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import { createFile, getAllFiles, trackFile, requestFile, moveFile, uploadFile, deleteFile} from '../controllers/fileController.js';
-import checkRole from '../middlewares/checkRole.js';
+import { checkRole, checkDepartmentAccess } from '../middlewares/accessControl.js';
+import * as fileController from '../controllers/fileController.js';
 
 const router = express.Router();
 
@@ -18,7 +19,14 @@ const storage = multer.diskStorage({
 const upload = multer({ dest: 'uploads/' });
 
 
+// Only admin or managers can delete files
+router.delete('/:id', authMiddleware, checkRole(['admin', 'manager']), checkDepartmentAccess, fileController.deleteFile);
 
+// Only employees of the same department can view files
+//router.get('/:id', authMiddleware, checkDepartmentAccess, fileController.getFile);
+
+// Only managers can move files (restricted by department)
+router.put('/:id/move', authMiddleware, checkRole(['admin', 'manager']), checkDepartmentAccess, fileController.moveFile);
 
 
 
