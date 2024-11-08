@@ -1,9 +1,8 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
 dotenv.config();
 
-export default function authMiddleware(req, res, next) {
+export default async function authMiddleware(req, res, next) {
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
@@ -11,9 +10,11 @@ export default function authMiddleware(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Ensure `JWT_SECRET` matches what's used to sign the token
-    req.user = decoded; // Attach the decoded user data to the request object
-    next(); // Proceed to the next middleware or route handler
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id); // Assuming User model has role field
+    req.user = { id: user._id, role: user.role }; // Attach role to req.user
+
+    next();
   } catch (err) {
     res.status(401).json({ message: 'Invalid or expired token' });
   }
