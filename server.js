@@ -9,6 +9,7 @@ import analyticsRoutes from './routes/analyticsRoutes.js';
 import purchaseOrderRoutes from './routes/purchaseOrderRoutes.js';
 import tenderRoutes from './routes/tenderRoutes.js';
 import inventoryRequestRoutes from './routes/inventoryRequestRoutes.js';
+import backorderRoutes from './routes/backorderRoutes.js';
 
 // Initialize the express app
 const app = express();
@@ -27,6 +28,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   .catch((err) => console.log('MongoDB connection error:', err));
 
 // Routes
+app.use('/api/backorders', backorderRoutes);
 app.use('/api/inventory-requests', inventoryRequestRoutes);
 app.use('/api/purchase-orders', purchaseOrderRoutes);
 app.use('/api/tenders', tenderRoutes);
