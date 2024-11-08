@@ -8,8 +8,11 @@ import {
 import authMiddleware from '../middlewares/authMiddleware.js';
 import checkPermission from '../middlewares/accessControlMiddleware.js';
 import { permissions } from '../config/roles.js';
+import { useInventoryItem } from '../controllers/inventoryController.js';
 
 const router = express.Router();
+
+router.post('/use', authMiddleware, useInventoryItem);
 
 // Route to view inventory - requires VIEW_INVENTORY permission
 router.get('/', authMiddleware, checkPermission(permissions.VIEW_INVENTORY), getInventory);

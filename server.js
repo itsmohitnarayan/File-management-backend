@@ -11,6 +11,8 @@ import tenderRoutes from './routes/tenderRoutes.js';
 import inventoryRequestRoutes from './routes/inventoryRequestRoutes.js';
 import backorderRoutes from './routes/backorderRoutes.js';
 import salesOrderRoutes from './routes/salesOrderRoutes.js';
+import cron from 'node-cron';
+import { checkAndReorderStock } from './services/stockMonitorService.js';
 
 // Initialize the express app
 const app = express();
@@ -39,6 +41,12 @@ app.use('/api/requests', requestRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/files', fileRoutes);
+
+// Schedule to run every day at midnight
+cron.schedule('0 0 * * *', async () => {
+  console.log('Running scheduled stock level check...');
+  await checkAndReorderStock();
+});
 
 // Start server
 const PORT = process.env.PORT || 5000;
