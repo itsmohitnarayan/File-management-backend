@@ -1,147 +1,104 @@
-# File Management System
+# File-management-backend
 
-This is a file management system built with Node.js, Express, and MongoDB that allows users to upload, track, move, and manage files. The system supports user authentication with JWT tokens and provides endpoints to manage file operations such as uploading, requesting movement, and tracking files. It includes functionalities for file metadata management, such as status updates and department tracking.
+## Overview
+
+The **File-management-backend** is a comprehensive solution designed to streamline the management of files and inventory within an organization. It automates key processes such as file movement, purchase orders, inventory management, and sales orders. The system enhances transparency, reduces manual intervention, and ensures efficient tracking and management of files and inventory.
 
 ## Features
 
-- **User Authentication**: User registration, login, and JWT-based authentication.
-- **File Upload**: Upload files along with metadata (e.g., department, status).
-- **File Tracking**: Track and monitor the status and movement of files.
-- **File Movement**: Request and update the status and location of files.
-- **File Deletion**: Delete files from the system.
-- **User Management**: Change password and view user details.
+### 1. **File Movement Management**
+   - **Automated File Tracking and Movement**: Automatically track files as they move between departments, logging and tracing their locations.
+   - **Request and Approval Workflow**: Departments can request files, and approval is required before files are moved, ensuring accountability.
+   - **Department-Specific Access Controls**: Role-based access controls to ensure that only authorized personnel can move or access files.
+   - **File Movement Analytics**: Real-time analytics to identify bottlenecks and improve the efficiency of file movement.
+
+### 2. **Inventory Management**
+   - **Automated Purchase Orders and Tender Management**: Automate the creation of purchase orders, manage tender statuses, and notify stakeholders of updates.
+   - **Request and Approval System for Inventory Items**: Departments can request inventory items, and approval is required before procurement.
+   - **Inventory Backordering**: Track out-of-stock items and automatically create backorders for efficient restocking.
+   - **Sales Orders and Tender Status Management**: Automate sales order management, track order statuses, and ensure timely delivery.
+   - **Access Control for Inventory Data**: Role-based access to ensure only authorized personnel can modify or access critical inventory data.
+   - **Stock Level and Usage Monitoring**: Monitor stock levels and consumption rates to prevent overstocking or stockouts. Automatically trigger purchase orders when stock drops below set thresholds.
 
 ## Technologies Used
+- **Backend**: Node.js, Express.js, MongoDB
+- **Frontend**: React, Material-UI, ApexCharts
+- **Other Libraries**: Mongoose (ODM for MongoDB), React Router, React Hooks
 
-- **Node.js**: JavaScript runtime for building the server-side logic.
-- **Express**: Web framework for building the API.
-- **MongoDB**: NoSQL database to store user and file data.
-- **Mongoose**: ODM for interacting with MongoDB.
-- **JWT**: JSON Web Token for user authentication and authorization.
-- **Multer**: Middleware for handling file uploads.
+## Setup Instructions
 
-## Prerequisites
+### Prerequisites
 
-Before you start, ensure you have the following installed:
+- **Node.js** (v16 or higher)
+- **MongoDB** (local or remote instance)
+- **Yarn** or **npm**
 
-- Node.js (>=14.0.0)
-- npm (Node Package Manager)
-- MongoDB (local instance or cloud-based service like MongoDB Atlas)
+### Step 1: Clone the repository
 
-## Installation
+```bash
+git clone https://github.com/itsmohitnarayan/File-management-backend.git
+cd File-management-backend
+```
 
-1. Clone the repository:
+### Step 2: Install Dependencies
 
-   ```bash
-   git clone https://github.com/itsmohitnarayan/File-management-backend.git
-   cd File-management-backend
-   ```
+#### Backend (Node.js)
+```bash
+cd backend
+npm install
+```
 
-2. Install dependencies:
+### Step 3: Configure Environment Variables
 
-   ```bash
-   npm install
-   ```
+Ensure you have the following environment variables set:
 
-3. Set up your MongoDB connection in the `config.js` or directly in the code (typically inside the `server.js` file). Ensure that MongoDB is running locally or use a cloud service.
+- `MONGODB_URI`: MongoDB connection URI
+- `PORT`: Port for the backend API (default: `5000`)
 
-4. Run the application:
+### Step 4: Running the Application
 
-   ```bash
-   npm run dev
-   ```
+#### Backend
+```bash
+cd backend
+npm run dev
+```
 
-   This will start the server on `http://localhost:5000`.
+The backend will be accessible at `http://localhost:5000`.
 
 ## API Endpoints
 
-Here are the key API routes provided by the system:
+### File Movement API
+- **GET /files**: Get a list of all files.
+- **POST /files**: Add a new file to the system.
+- **PUT /files/:id**: Update file details.
+- **DELETE /files/:id**: Delete a file from the system.
 
-### User Endpoints
+### Purchase Order API
+- **POST /purchase-orders**: Create a new purchase order.
+- **GET /purchase-orders**: List all purchase orders.
+- **GET /purchase-orders/:id**: Get details of a specific purchase order.
+- **PUT /purchase-orders/:id**: Update the status of a purchase order.
 
-- **POST** `/api/users/register` - Register a new user.
-  - Request body: `{ "name": "John Doe", "email": "email@example.com", "password": "password" }`
-  
-- **POST** `/api/users/login` - Log in a user and get a JWT token.
-  - Request body: `{ "email": "email@example.com", "password": "password" }`
-  
-- **PUT** `/api/users/:userId/changePassword` - Change the user's password.
-  - Request body: `{ "oldPassword": "oldpassword", "newPassword": "newpassword" }`
-  
-### File Endpoints
+### Inventory API
+- **POST /inventory**: Create a new inventory item.
+- **GET /inventory**: List all inventory items.
+- **PUT /inventory/:id**: Update inventory item details.
+- **DELETE /inventory/:id**: Delete an inventory item.
 
-- **POST** `/api/files` - Upload a new file.
-  - Request body: `{ "file": "file", "department": "HR", "status": "on the way" }`
-  
-- **GET** `/api/files` - Get all files (requires authentication).
-  
-- **GET** `/api/files/:fileId` - Get details of a specific file.
-  
-- **POST** `/api/files/:fileId/track` - Track a specific file.
-  
-- **POST** `/api/files/:fileId/request` - Request movement of a file.
-  
-- **PUT** `/api/files/:fileId/move` - Move a file to a new department or location.
-  
-- **DELETE** `/api/files/:fileId` - Delete a specific file.
+### Sales Order API
+- **POST /sales-orders**: Create a new sales order.
+- **GET /sales-orders**: List all sales orders.
+- **PUT /sales-orders/:id**: Update sales order status.
 
-### Authentication Middleware
+## Contribution Guidelines
 
-All file-related endpoints (except for file upload and user registration/login) require a valid JWT token. Include the token in the request header as follows:
+Feel free to fork this repository, create branches, and submit pull requests. Please ensure the following:
 
-```bash
-Authorization: Bearer <JWT_TOKEN>
-```
+- Follow the existing code style and practices.
+- Write unit tests for new features.
+- Update documentation as necessary.
 
-## Testing
-
-To run tests, use **Jest** and **Supertest**. First, install the dependencies if you haven't:
-
-```bash
-npm install --save-dev jest supertest
-```
-
-Then, run the tests using:
-
-```bash
-npm test
-```
-
-```
-http://localhost:5000/api/users/register post
-{
-  "username": "johndoe123",
-  "name": "John Doe",
-  "email": "johndoe@example.com",
-  "password": "securepassword"
-}
-
-http://localhost:5000/api/users/login  post
-
-{
-  "email": "johndoe@example.com",
-  "password": "newsecurepassword"
-}
-
-```
-
-```
-ignore this 
-log 
-
-request and approval from management which is requested by department 
-
-role based access control management, department,  and users
-
-realtime analytic of the average time taken for the file movement
- 
-```
-
-Test cases are structured to verify the key functionalities like file upload, movement, and user authentication.
-
-## Contributing
-
-Feel free to open an issue or make a pull request if you want to contribute to the project. Contributions, bug reports, and suggestions are always welcome.
+> This **File-management-backend** ensures efficient management of files and inventory, improves workflow automation, and enhances transparency. The system leverages modern technologies like Node.js, React, and MongoDB to deliver high-performance features and maintain a seamless experience across departments.
 
 ## License
 
