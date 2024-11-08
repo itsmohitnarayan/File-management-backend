@@ -6,6 +6,8 @@ import authRoutes from './routes/authRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
 import requestRoutes from './routes/requestRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import purchaseOrderRoutes from './routes/purchaseOrderRoutes.js';
+import tenderRoutes from './routes/tenderRoutes.js';
 
 // Initialize the express app
 const app = express();
@@ -24,6 +26,8 @@ mongoose.connect(process.env.MONGODB_URI, {
   .catch((err) => console.log('MongoDB connection error:', err));
 
 // Routes
+app.use('/api/purchase-orders', purchaseOrderRoutes);
+app.use('/api/tenders', tenderRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/auth', authRoutes);
