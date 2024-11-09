@@ -59,7 +59,6 @@ Ensure you have the following environment variables set:
 
 #### Backend
 ```bash
-cd backend
 npm run dev
 ```
 
