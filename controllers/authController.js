@@ -13,6 +13,8 @@ export const registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      role: req.body.role,
+      department: req.body.department,
     });
 
     await user.save();
