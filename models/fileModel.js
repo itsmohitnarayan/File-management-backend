@@ -40,6 +40,7 @@ const fileSchema = new mongoose.Schema({
   department: { type: String, required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   movements: [movementSchema],  // Array to store movement history
+  filePath: { type: String, required: true }  // Ensure filePath is part of the schema
 });
 
 const File = mongoose.model('File', fileSchema);

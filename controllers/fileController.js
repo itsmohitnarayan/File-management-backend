@@ -1,3 +1,5 @@
+import File from '../models/fileModel.js';  // Adjust the path if necessary
+
 // Track file movement
 export const trackFile = (req, res) => {
   const { fileId } = req.params;
@@ -80,13 +82,14 @@ export const deleteFile = async (req, res) => {
       return res.status(404).json({ message: 'File not found' });
     }
 
+    await File.findByIdAndDelete(fileId);
     return res.status(200).json({ message: 'File deleted successfully' });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to delete file', error: error.message });
   }
 };
 
-export const getAllFiles = async (req, res) => {
+export const getAllFiles = async (_req, res) => {
   try {
       const files = await File.find();  // Assuming File is your mongoose model for files
       res.json(files);
@@ -116,26 +119,44 @@ export const updateFile = async (req, res) => {
 };
 
 export const moveFile = async (req, res) => {
-  const { newDepartment } = req.body;
-
   try {
-    const file = await File.findById(req.params.id);
-    if (!file) return res.status(404).json({ message: 'File not found' });
+    
+    const { filePath, newDepartment } = req.body;
+    console.log("Searching for file with path:", filePath);
+    console.log("filePath received:", filePath);
+    console.log("filePath:", filePath);
+    console.log("newDepartment:", newDepartment);
 
-    // Log the movement details in the file's movements array
+    // Find the file by its filePath
+    const file = await File.findOne({ filePath: filePath });
+
+    console.log("Found file:", file);
+
+    if (!file) {
+      console.log("File not found with path:", filePath);
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    // Add a new movement entry to the movements array
     file.movements.push({
       fromDepartment: file.department,
       toDepartment: newDepartment,
-      movedAt: Date.now(),
+      movedAt: new Date(),
     });
 
-    // Update the current department
+    // Update the department of the file
     file.department = newDepartment;
+
+    // Save the file document with the new movement entry
     await file.save();
 
-    res.json({ message: 'File moved successfully', file });
+    res.status(200).json({
+      message: `File moved from ${file.department} to ${newDepartment}`,
+      file,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to move file', error: error.message });
+    console.error("Error in moveFile:", error);
+    res.status(500).json({ error: 'Failed to move file', details: error.message });
   }
 };
 

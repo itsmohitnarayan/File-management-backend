@@ -29,7 +29,8 @@ router.delete('/:id', authMiddleware, checkRole(['admin', 'manager']), checkDepa
 router.put('/:id/move', authMiddleware, checkRole(['admin', 'manager']), checkDepartmentAccess, fileController.moveFile);
 
 
-
+// Define the POST /move route
+router.post('/move', moveFile);
 
 
 // Add a new route for uploading files
